@@ -4,8 +4,6 @@ O projeto consiste em um sistema de monitoramento inteligente para pátios de mo
 # Integrantes
 * Celso Canaveze Teixeira Pinto - RM556118
 
-* Sofia Domingues Gonçalves - RM554920
-
 * Thiago Moreno Matheus - RM554507
 
 ## 📲 Visão Geral — Projeto de Monitoramento de Motos via ESP32
@@ -150,4 +148,5 @@ A cada clique:
     * MQTT para comunicação entre os dispositivos
 
     * MQTT para comunicação entre os dispositivos
+
     Node-RED para visualização no dashboard
