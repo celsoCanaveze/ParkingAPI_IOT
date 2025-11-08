@@ -1,0 +1,29 @@
+{
+  "prontas": [
+    {
+      "placa": "ZZZ-9999",
+      "modelo": "Honda Biz 125",
+      "status": 0,
+      "lat": -23.546593256518147,
+      "lon": -46.62721679568766,
+      "locked": false
+    },
+    {
+      "placa": "BRA-5678",
+      "modelo": "Yamaha Factor 150",
+      "status": 0,
+      "lat": -23.550919,
+      "lon": -46.629885
+    },
+    {
+      "id": "moto-100100c40a24",
+      "status": 0,
+      "lat": -23.4137,
+      "lon": -46.516998,
+      "placa": "XYZ2547",
+      "modelo": "Honda CG 160"
+    }
+  ],
+  "pendentes": [],
+  "manutencao": []
+}
