@@ -1,152 +1,125 @@
-# 🛵Monitoramento Inteligente de Pátio de Motos
-O projeto consiste em um sistema de monitoramento inteligente para pátios de motos da Mottu, permitindo a localização precisa e gestão em tempo real das motos através de tecnologias IoT e visualização em dashboard.
+🛵 Monitoramento Inteligente de Pátio de Motos — Mottu Challenge
 
-# Integrantes
-* Celso Canaveze Teixeira Pinto - RM556118
+Solução de monitoramento inteligente para pátios de motos da Mottu, permitindo localização precisa e gestão em tempo real da frota por meio de tecnologias IoT, comunicação MQTT e dashboard interativo.
 
-* Thiago Moreno Matheus - RM554507
+👥 Integrantes
+Nome	RM	Funções no Projeto
+Celso Canaveze Teixeira Pinto	RM556118	IoT, Dashboard, Integração
+Thiago Moreno Matheus	RM554507	API, Banco de Dados, DevOps
+🎯 Objetivo do Projeto
 
-## 📲 Visão Geral — Projeto de Monitoramento de Motos via ESP32
-* Cada moto possui um identificador único (ID), placa e modelo, enviados automaticamente via IoT (simulados no código).
+Garantir visibilidade total das motos dentro do pátio Mottu, acompanhando:
 
-* Um ESP32 simula a recepção dos dados da moto (placa, modelo, status e localização).
+✅ Localização
+✅ Status operacional (pronta / pendente / manutenção)
+✅ Monitoramento em tempo real
+✅ Histórico de movimentação e alertas
 
-* O sistema cruza esses dados com os comandos recebidos via broker MQTT (tópico mottu/patio/comandos).
+📌 O projeto está alinhado ao desafio real da Mottu para otimizar operações e reduzir perdas.
 
-* A informação da moto é publicada periodicamente no tópico MQTT mottu/patio/motos.
+🏛️ Arquitetura da Solução
 
-* Um dashboard Node-RED ou outro serviço MQTT pode visualizar o status, localização e dados da moto em tempo real.
+Fluxo completo dos dados (ponta a ponta):
 
-## 🧠 Lógica do Projeto
-* O ESP32 não faz leitura física da placa ou presença — os dados da moto são simulados e recebidos via rede/MQTT.
+ESP32 (simulado) → MQTT Broker → Node-RED
+→ Processamento e classificação
+→ Dashboard e Persistência dos dados (CSV/JSON)
 
-* Ao receber comandos via MQTT (ex: PRONTA_PARA_ALUGAR, EM_MANUTENCAO, ALERTA), o ESP32:
 
-    1. Atualiza o status interno da moto.
+✅ Captura IoT
+✅ Processamento e automação
+✅ Visualização final
+✅ Persistência e histórico
 
-    2. Atualiza o LED RGB, indicando o status visualmente:
+📡 IoT com ESP32 (Simulado no Wokwi)
 
-        * 🟢 Verde: PRONTA_PARA_ALUGAR
+Cada moto possui:
 
-        * 🟡 Amarelo: PENDENTE_REGULARIZACAO
+ID único
 
-        * 🔴 Vermelho: EM_MANUTENCAO
+Placa
 
-3. Aciona o buzzer com sons distintos para cada status.
+Modelo
 
-4. Publica os dados atualizados da moto (incluindo posição aleatória simulada) no tópico mottu/patio/motos.
+Status operacional
 
-## 🔘 Interação Local (Botão Físico)
-Um botão conectado ao ESP32 permite ciclar entre os três estados da moto manualmente.
+Localização (coordenadas simuladas)
 
-A cada clique:
+Os dados são enviados periodicamente ao MQTT em:
 
-* O status é alterado em sequência.
+📌 mottu/patio/motos
 
-* O LED e o buzzer reagem ao novo estado.
+O ESP32 também recebe comandos do sistema:
 
-* Os dados são publicados automaticamente no broker MQTT.
+📌 mottu/patio/comandos
 
-## 🏷️ Exemplo de Status Cadastrados
-* PRONTA_PARA_ALUGAR – Moto autorizada a sair do pátio
+Status indicados no LED RGB e buzzer como feedback local.
 
-* EM_MANUTENCAO – Moto em manutenção, bloqueada
+🚦 Status das Motos
+Status	Indicador	Significado
+PRONTA_PARA_ALUGAR	🟢 LED Verde	Moto liberada
+PENDENTE_REGULARIZACAO	🟡 LED Amarelo	Requer análise
+EM_MANUTENCAO	🔴 LED Vermelho	Bloqueada para uso
 
-* PENDENTE_REGULARIZACAO – Cadastro pendente ou precisa de análise
+Mudança de status pode ocorrer:
 
-## 🔌 Componentes Usados
-* ESP32 (simulado no Wokwi)
+🖱️ por comando via MQTT
+🔘 por botão físico (simulado)
 
-* LED RGB para indicar status da moto:
+🧠 Lógica do Dispositivo
 
-    * Verde (LED_GREEN): Pronta para alugar
+1️⃣ Recebe status e dados via MQTT ou botão
+2️⃣ Atualiza indicadores visuais (LED + buzzer)
+3️⃣ Publica a nova situação da moto
+4️⃣ Simula movimentação pela área do pátio
 
-    * Amarelo (LED_YELLOW): Pendente
+📌 Uma nova moto entra a cada 10s durante a simulação
 
-    * Vermelho (LED_RED): Em manutenção
+🖥️ Node-RED — Processamento + Dashboard
 
-* Buzzer: Alerta sonoro conforme o status da moto
+O Node-RED:
 
-* Botão físico: Altera o status manualmente (ciclo entre os 3 status)
+✔ Recebe dados via MQTT
+✔ Classifica motos por status
+✔ Exibe localização e estado em tempo real
+✔ Salva histórico da frota
 
-* Conexão Wi-Fi
+Arquivos gerados automaticamente:
 
-* Broker MQTT público: broker.hivemq.com
+Arquivo	Conteúdo	Atualização
+motos.json	Situação atual do pátio	Em tempo real
+historico.csv	Movimentações e alertas	Sempre que houver alteração
 
-* Node-RED: Dashboard para visualização interativa
+Dashboard inclui:
 
- ## 📡 Tópico MQTT Utilizado
-* Publicação: mottu/patio/motos → Moto envia status e localização
+✅ Lista de motos divididas por status
+✅ Mapa interativo com suas localizações
+✅ Atualizações sem recarregar página
 
-* Comando: mottu/patio/comandos → Recebe comandos para alterar o status
+URL padrão: http://localhost:1880/ui
 
-## 📤 Fluxo da Informação
-1. Moto (simulada) → Envia placa e status para o ESP32
+(inserir prints do dashboard no repositório)
 
-2. ESP32 → Processa e atualiza status, acionando LEDs e buzzer
+🛠️ Tecnologias Utilizadas
+Categoria	Tecnologias
+IoT & Simulação	ESP32, Wokwi
+Comunicação	MQTT — Broker HiveMQ
+Processamento e UI	Node-RED Dashboard
+Armazenamento	JSON & CSV
+Versão e Deploy	GitHub — Controle e documentação
+▶️ Como Executar
 
-3. Publica via MQTT → Envia informações para o Broker MQTT
+1️⃣ Instale e rode o Node-RED:
 
-4. Node-RED → Exibe o status no painel de controle
+node-red
 
-## 🧪 Simulação de Placas
-* A leitura da placa é simulada com seleção aleatória no código
 
-* Em um cenário real, as placas seriam enviadas via módulo RFID ou dispositivo IoT conectado à moto
+2️⃣ Importe o fluxo da pasta /node-red
 
-* A cada 10 segundos, o ESP32 simula a chegada de uma nova moto, publicando a localização e status
+3️⃣ Abra a interface na Web:
+🔗 http://localhost:1880/ui
 
-## 🖥️ Visualização com Node-RED
-* Tópico monitorado: mottu/patio/motos
+4️⃣ Inicie o ESP32 no Wokwi
+👉 Ele começa a enviar automaticamente
 
-* Dashboard exibe:
-
-    * Lista por status (Pronta para alugar, Manutenção, Pendente)
-
-    * Mapa interativo com localização das motos
-
-    * Botão "Localizar" para centralizar o mapa na moto selecionada
-
-    * Atualização em tempo real dos status e localizações
-
-## 🚦 Comportamento dos LEDs e Buzzer
-* LED verde (🟢): Moto PRONTA_PARA_ALUGAR
-
-* LED amarelo (🟡): Moto PENDENTE_REGULARIZACAO
-
-* LED vermelho (🔴): Moto EM_MANUTENCAO
-
-* Buzzer: Emite sons diferentes conforme o status da moto
-
-## 📋 Exemplo de Saída Serial
-
-    Copiar
-    Editar
-    [INFO] Sistema iniciado - Moto IoT  
-    Wi-Fi conectado!  
-    Endereço IP: 192.168.0.105  
-    Moto recebida: ID 102 - JLM3F45 - Modelo CG160  
-    Status atual: EM_MANUTENCAO  
-    [MQTT] Publicado em mottu/patio/motos  
-    [ALERTA] LED vermelho ativado | Som de erro  
-
-## 🛠️ Tecnologias Utilizadas
-* Hardware (simulado):
-
-    * ESP32
-
-    * LED RGB para status (pinos 2, 4)
-
-    *  Buzzer (pino 5)
-
-    * Botão (pino 6) para alterar manualmente o status
-
-* Software:
-
-    * Wokwi Simulator para simulação do ESP32
-
-    * MQTT para comunicação entre os dispositivos
-
-    * MQTT para comunicação entre os dispositivos
-
-    Node-RED para visualização no dashboard
+5️⃣ Observe as motos surgindo e mudando de status ✅
